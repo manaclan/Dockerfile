@@ -1,0 +1,20 @@
+FROM ubuntu:20.04
+
+RUN apt-get update && \
+  apt-get install -y wget
+RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
+RUN bash ~/miniconda.sh -b -p ~/miniconda 
+RUN rm ~/miniconda.sh
+RUN echo ". ~/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc
+RUN echo "conda activate" >> ~/.bashrc
+SHELL [ "/bin/bash", "--login", "-c" ]
+ENV PATH="/root/miniconda/bin:$PATH"
+RUN source ~/.bashrc
+
+WORKDIR /usr/src/
+
+COPY environment.yml ./
+RUN conda env create -f environment.yml
+CMD /bin/bash -c "conda run --no-capture-output -n hpstats uvicorn server:app --reload --host 0.0.0.0 --port 8519"
+
+#remember to conda install pip or else pip install will install everything into base package
