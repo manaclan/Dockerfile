@@ -24,14 +24,12 @@ RUN conda create -n face_rotater python==3.8 -y
 SHELL ["conda", "run", "--no-capture-output", "-n", "face_rotater", "/bin/bash", "-c"]
 RUN pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
 RUN pip install cython 
-RUN  pip install -U insightface 
-RUN  pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.8.0/index.html 
-RUN  pip install mmdet && pip install -U insightface 
-RUN  pip install onnxruntime-gpu==1.8.0 onnxruntime==1.8.0 
+RUN pip install -U insightface
+RUN pip install onnxruntime-gpu==1.8.0 onnxruntime==1.8.0 
+RUN pip install uvicorn==0.15.0
 RUN pip install "fastapi[all]" imutils imgaug
-
 COPY yolov5 yolov5
 WORKDIR /usr/src/rotater/yolov5
 RUN pip install -r requirements.txt
 WORKDIR /usr/src/rotater/
-ENTRYPOINT uvicorn server:app --reload --host 0.0.0.0 --port 8171
+ENTRYPOINT uvicorn server:app --host 0.0.0.0 --port 8171
