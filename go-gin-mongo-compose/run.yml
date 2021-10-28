@@ -1,0 +1,18 @@
+services:
+  server:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    image: vc_login_backend
+    ports:
+      - 8525:8525
+    restart: unless-stopped
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27000:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
